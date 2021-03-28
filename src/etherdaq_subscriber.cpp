@@ -84,7 +84,7 @@ int main (int argc, char ** argv)
 	ros::NodeHandle n;
 	ros::Rate loop_rate(1000);  // The loop rate
 	ros::Publisher zero_pub = n.advertise<std_msgs::Bool>("ethdaq_zero", 1);  // The topic where we send "zeroing" (Like tare)
-	ros::Subscriber sub_raw = n.subscribe("data", 1000, chatterCallback); // The callback where we waiting for Wrench data
+	ros::Subscriber sub = n.subscribe("/etherdaq_node/data", 1000, chatterCallback); // The callback where we waiting for Wrench data
 
 	ros::Duration zeroingTime(10.0);
 	ros::Time lastZeroing = ros::Time::now();
