@@ -75,10 +75,6 @@ void chatterCallback(const geometry_msgs::WrenchStamped& msg)
 	lastTime = currentTime;
 	
 	ROS_INFO("%u Fx:%.2f Fy:%.2f Fz:%.2f Tx:%.2f Ty:%.2f Tz:%.2f T:%.2f ms S: %.2f Hz\r\n", msg.header.seq, msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z, msg.wrench.torque.x, msg.wrench.torque.y, msg.wrench.torque.z, durationTime, frequency);
-
-	
-
-	
 }
 
 
@@ -88,9 +84,7 @@ int main (int argc, char ** argv)
 	ros::NodeHandle n;
 	ros::Rate loop_rate(1000);  // The loop rate
 	ros::Publisher zero_pub = n.advertise<std_msgs::Bool>("ethdaq_zero", 1);  // The topic where we send "zeroing" (Like tare)
-	ros::Subscriber sub_raw = n.subscribe("ethdaq_data_raw", 1000, chatterCallback); // The callback where we waiting for Wrench data
-	ros::Subscriber sub_new = n.subscribe("ethdaq_data", 1000, chatterCallback);
-
+	ros::Subscriber sub_raw = n.subscribe("data", 1000, chatterCallback); // The callback where we waiting for Wrench data
 
 	ros::Duration zeroingTime(10.0);
 	ros::Time lastZeroing = ros::Time::now();

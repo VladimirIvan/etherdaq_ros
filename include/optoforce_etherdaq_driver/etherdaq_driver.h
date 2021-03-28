@@ -45,8 +45,8 @@
 #include <tinyxml.h>
 #include <boost/lexical_cast.hpp>
 
-#include "diagnostic_updater/DiagnosticStatusWrapper.h"
-#include "geometry_msgs/WrenchStamped.h"
+#include <diagnostic_updater/DiagnosticStatusWrapper.h>
+#include <geometry_msgs/WrenchStamped.h>
 
 namespace optoforce_etherdaq_driver
 {

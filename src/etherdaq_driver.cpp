@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "etherdaq_driver/etherdaq_driver.h"
+#include <optoforce_etherdaq_driver/etherdaq_driver.h>
 #include <stdint.h>
 #include <exception>
 
@@ -175,7 +175,7 @@ EtherDAQDriver::EtherDAQDriver(const std::string &address, unsigned int uSpeed, 
     curl_easy_setopt(curl, CURLOPT_URL, xml_url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_string);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response); 
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 60);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
 	
     result = curl_easy_perform(curl);
     if(result != CURLE_OK)

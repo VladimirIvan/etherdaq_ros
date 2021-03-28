@@ -7,17 +7,19 @@ find_package(catkin REQUIRED COMPONENTS
   diagnostic_updater
   geometry_msgs
   roscpp
+  tf_conversions
 )
 
-find_package(Boost REQUIRED COMPONENTS system thread program_options)
+find_package(Boost REQUIRED)
 find_package(CURL REQUIRED)
 find_package(TinyXML REQUIRED)
-
+find_package(orocos_kdl REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES etherdaq_driver
-  CATKIN_DEPENDS diagnostic_msgs diagnostic_updater geometry_msgs roscpp 
+  CATKIN_DEPENDS diagnostic_msgs diagnostic_updater geometry_msgs roscpp tf_conversions
+  DEPENDS orocos_kdl
 )
 
 include_directories(

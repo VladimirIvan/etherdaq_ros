@@ -1,14 +1,6 @@
 <launch>
-	<node
-		pkg="optoforce_etherdaq_driver"
-		type="etherdaq_node"
-		name="etherdaq_node"
-		args="--address 192.168.100.12 --rate 1000 --filter 4"
-	/>
-	<node
-		pkg="optoforce_etherdaq_driver"
-		type="etherdaq_subscriber"
-		name="etherdaq_subscriber"
-		output="screen"
-	/>
+    <node pkg="optoforce_etherdaq_driver" type="etherdaq_node" name="etherdaq_node">
+		<param name="Address" type="string" value="192.168.0.30"/>
+    </node>
+    <node pkg="optoforce_etherdaq_driver" type="etherdaq_subscriber" name="etherdaq_subscriber" output="screen" />
 </launch>
