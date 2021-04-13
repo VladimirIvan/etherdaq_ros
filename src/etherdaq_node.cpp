@@ -94,6 +94,7 @@ public:
       if(!listener_.waitForTransform(base_frame_id_, frame_id_, ros::Time(0), ros::Duration(5.0)))
       {
         update_tool_offset_ = false;
+        ROS_WARN_STREAM("Could not get reference frames, not updating tool offset.");
       }
     }
     
@@ -128,6 +129,8 @@ public:
     diag_array.status.reserve(1);
     diagnostic_updater::DiagnosticStatusWrapper diag_status;
     ros::Time last_diag_pub_time(ros::Time::now());
+
+    ROS_INFO_STREAM("F/T node started");
 
     while (ros::ok())
     {
