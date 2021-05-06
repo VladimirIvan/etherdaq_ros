@@ -1,6 +1,7 @@
 <launch>
+    <arg name="address" default="192.168.0.30" />
     <node pkg="optoforce_etherdaq_driver" type="etherdaq_node" name="etherdaq_node">
-		<param name="Address" type="string" value="192.168.0.30"/>
+		  <param name="Address" type="string" value="$(arg address)"/>
     </node>
     <node pkg="optoforce_etherdaq_driver" type="etherdaq_subscriber" name="etherdaq_subscriber" output="screen" />
 </launch>

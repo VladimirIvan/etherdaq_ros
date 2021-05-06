@@ -1,24 +1,6 @@
 # etherdaq_ros
-The driver has been tested under Ubuntu 14.04 and ROS indigo.
+The driver has been tested under Ubuntu 18.04 and ROS Melodic.
 To build the sources you should use catkin
-
-
-Compiling
----------
-Assuming you are in home directory, and you have root priviliges first you should do the following steps
-
-In a console, type:
-
- * mkdir opto_ws
- * cd opto_ws
- * mkdir src
- * cd src
- * catkin_init_workspace
- * git clone https://github.com/OptoForce/etherdaq_ros.git
- * cd ..
- * catkin_make
-
-After successful compiling, you will have two executable files and one library file.
 
 
 Usage - Demo
@@ -27,43 +9,19 @@ Usage - Demo
 First, should check if the EtherDAQ is working by OptoForce Ethernet Discovery Tool. The tool will 
 show you the address of your EtherDAQ device(s) connected to your network.
 
-To be able to run the ROS demo, you have to modify the following file: 
-opto_ws/src/opto_ros_driver/ethernet_daq_driver/launch/demo.launch
-Replace 192.168.100.12 in the following line args="--address 192.168.100.12 --rate 1000 --filter 4"
-to your EtherDAQ's address provided by the Ethernet Discovery Tool.
-
-To run the demo be sure that you are in the home/opto_ws directory!
-Type roslaunch optoforce_etherdaq_driver demo.launch
-
-You should see something similar on your console:
-
-
-[ INFO] [1455791190.094318011]: 2559 Fx:-116.00 Fy:122.00 Fz:141.00 Tx:-183.00 Ty:66.00 Tz:98.00 T:0.06 ms S: 884.97 Hz
-
-[ INFO] [1455791190.095304760]: 2560 Fx:-116.00 Fy:122.00 Fz:141.00 Tx:-183.00 Ty:66.00 Tz:99.00 T:0.98 ms S: 885.17 Hz
-
-[ INFO] [1455791190.096267234]: 2561 Fx:-116.00 Fy:122.00 Fz:141.00 Tx:-184.00 Ty:65.00 Tz:98.00 T:0.96 ms S: 885.40 Hz
-
-[ INFO] [1455791190.097198648]: 2562 Fx:-116.00 Fy:121.00 Fz:141.00 Tx:-183.00 Ty:66.00 Tz:99.00 T:0.93 ms S: 885.67 Hz
-
-[ INFO] [1455791190.097247749]: 2563 Fx:-117.00 Fy:121.00 Fz:141.00 Tx:-183.00 Ty:66.00 Tz:99.00 T:0.05 ms S: 887.15 Hz
-
-[ INFO] [1455791190.099165675]: 2564 Fx:-117.00 Fy:121.00 Fz:141.00 Tx:-184.00 Ty:67.00 Tz:99.00 T:1.91 ms S: 886.08 Hz
-
-[ INFO] [1455791190.099251998]: 2565 Fx:-117.00 Fy:121.00 Fz:141.00 Tx:-184.00 Ty:67.00 Tz:99.00 T:0.09 ms S: 887.50 Hz
-
+To run the demo:
+```
+roslaunch optoforce_etherdaq_driver demo.launch address:=<ip>
+```
+where `<ip>` is your EtherDAQ's address provided by the Ethernet Discovery Tool.
 
 If the EtherDAQ does not repsonse, please double check the address in the demo.launch file.
-
-
-
 
 Usage - Real world
 ------------------
 
 
 The ROS driver is a simple node providing Force/Torque informations on a ROS topic.
-After compiling you can find the node in the /opto_ws/devel/lib/optoforce_etherdaq_driver.
 
 
 
@@ -97,9 +55,10 @@ The node publishes to the following topics:
 The list and short description of source files
 ----------------------------------------------
 
-* etherdaq_driver.cpp: 	   This is the module which implements the communication between EtherDAQ and ROS.
-* etherdaq_node.cpp: 	   This is the module which publish F/T values on ROS topics using etherdaq_driver.cpp 
+* src/etherdaq_driver.cpp: 	   This is the module which implements the communication between EtherDAQ and ROS.
+* src/etherdaq_node.cpp: 	   This is the module which publish F/T values on ROS topics using etherdaq_driver.cpp 
                            services.
-* etherdaq_subscriber.cpp: An example node which subscribes to the topics of etherdaq_node and displays
+* src/etherdaq_subscriber.cpp: An example node which subscribes to the topics of etherdaq_node and displays
                            the actual F/T, speed and elapsed times between two packets. Also this node 
                            does a zero/unzero in every 10 seconds.
+* script/force_sensor_interface This script creates the same interface as the driver adding tool and offset calibration capability. This script is intended to run with the simulator. The script subscribes to WrenchStamped topic adds offsets.

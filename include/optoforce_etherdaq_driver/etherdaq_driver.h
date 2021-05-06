@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2016, OptoForce, Ltd.
+ *  Copyright (c) 2021, OptoForce, Ltd., University of Edinburgh
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

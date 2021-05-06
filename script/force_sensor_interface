@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+
+import rospy
+import PyKDL as kdl
+from std_msgs.msg import Float64MultiArray
+from geometry_msgs.msg import Wrench, WrenchStamped, Vector3
+import tf
+
+class FTInterface:
+    def __init__(self):
+        self.offset = rospy.get_param('~offset', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.tool_offset = rospy.get_param('~tool_offset', [0.0, 0.0, 0.0, 0.0])
+        self.frame_id = rospy.get_param('~frame_id', 'ft_link')
+        self.base_frame_id = rospy.get_param('~base_frame_id', 'base_link')
+        self.update_tool_offset = rospy.get_param('~update_tool_offset', True)
+        self.tool_pose = kdl.Frame()
+
+        self.listener = tf.TransformListener()
+
+        if self.update_tool_offset:
+            rospy.logwarn('Checking for tool frame')
+            try:
+                self.listener.waitForTransform(self.base_frame_id, self.frame_id, rospy.Time(0), rospy.Duration(15.0))
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf.Exception):
+                self.update_tool_offset = False
+                rospy.logwarn('Could not get reference frames, not updating tool offset.')
+
+        self.pub = rospy.Publisher('~data', WrenchStamped, queue_size=1)
+
+        rospy.Subscriber('~offset', Float64MultiArray, self.offset_callback)
+        
+        if self.update_tool_offset:
+            rospy.Subscriber('~tool_offset', Float64MultiArray, self.tool_offset_callback)
+
+        rospy.Subscriber('~input', WrenchStamped, self.wrench_callback)
+
+    def wrench_callback(self, msg):
+        if self.update_tool_offset:
+            try:
+                pos, quat = self.listener.lookupTransform(self.base_frame_id, self.frame_id, rospy.Time(0))
+                self.tool_pose = kdl.Frame(kdl.Rotation.Quaternion(*quat), kdl.Vector(*pos))
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                pass
+
+        wrench = kdl.Wrench(kdl.Vector(msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z), kdl.Vector(msg.wrench.torque.x, msg.wrench.torque.y, msg.wrench.torque.z))
+        offset = kdl.Wrench(kdl.Vector(*self.offset[0:3]), kdl.Vector(*self.offset[3:6]))
+        wrench = wrench - offset + self.tool_pose.Inverse().M * kdl.Wrench(kdl.Vector(0 ,0 , self.tool_offset[0] * 9.8), kdl.Vector()).RefPoint(self.tool_pose.Inverse().M * kdl.Vector(*self.tool_offset[1:4]))
+
+        msg.wrench = Wrench(Vector3(*wrench.force), Vector3(*wrench.torque))
+        msg.header.frame_id = self.frame_id
+
+        self.pub.publish(msg)
+
+    def offset_callback(self, msg):
+        if len(msg.data) == 6:
+            self.offset = msg.data
+
+    def tool_offset_callback(self, msg):
+        if len(msg.data) == 4:
+            self.tool_offset = msg.data
+
+    def run(self):
+        rospy.loginfo('F/T sensor interface started')
+        rospy.spin()
+
+if __name__ == '__main__':
+    rospy.init_node('ft_interface', anonymous=True)
+    try:
+        driver = FTInterface()
+        driver.run()
+    except rospy.exceptions.ROSInterruptException:
+        pass

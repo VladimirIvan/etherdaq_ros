@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <package>
   <name>optoforce_etherdaq_driver</name>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <description>The optoforce_etherdaq_driver package</description>
 
-  <maintainer email="ros@optoforce.com">OptoForce</maintainer>
+  <maintainer email="v.ivan@ed.ac.uk">Vladimir Ivan</maintainer>
 
   <license>BSD</license>
 
   <author email="ros@optoforce.com">OptoForce</author>
-
+  <author email="v.ivan@ed.ac.uk">Vladimir Ivan</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>curl</build_depend>
